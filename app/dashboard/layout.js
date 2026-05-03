@@ -1,5 +1,4 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import { Urbanist } from "next/font/google";
 import "./globals.css";
 
 // FONTS
@@ -13,13 +12,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// NEW FONT: URBANIST
-const urbanist = Urbanist({
-  variable: "--font-urbanist",
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-});
-
 // METADATA (SERVER ONLY)
 export const metadata = {
   title: "Create Next App",
@@ -30,9 +22,9 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-urbanist">{children}</body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
