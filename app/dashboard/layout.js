@@ -1,32 +1,28 @@
-import "../globals.css";
+"use client";
 
-import { Geist, Geist_Mono } from "next/font/google";
-import { Urbanist } from "next/font/google";
+import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
+import { useState } from "react";
 
-// FONTS
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const DashboardLayout = ({ children }) => {
+  // controls mobile sidebar open state
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const urbanist = Urbanist({
-  variable: "--font-urbanist",
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-});
-
-export default function DashboardLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable}`}
-    >
-      <body className="font-urbanist min-h-screen">{children}</body>
-    </html>
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* SIDEBAR */}
+      <Sidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
+
+      {/* MAIN AREA */}
+      <div className="flex flex-col flex-1">
+        {/* TOPBAR */}
+        <Topbar setMobileOpen={setMobileOpen} />
+
+        {/* PAGE CONTENT */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">{children}</main>
+      </div>
+    </div>
   );
-}
+};
+
+export default DashboardLayout;

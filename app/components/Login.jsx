@@ -62,7 +62,7 @@ const Login = () => {
         // 7. VALIDATE CREDENTIALS
         if (email === user.email && password === user.password) {
           // SUCCESS → REDIRECT (no alert)
-          router.push("/test-tracker");
+          router.push("/dashboard");
           return; // IMPORTANT: stop further execution
         }
 

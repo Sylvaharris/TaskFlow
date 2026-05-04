@@ -63,7 +63,7 @@ const Register = () => {
         setPassword("");
 
         // 7. REDIRECT USER TO DASHBOARD
-        router.push("/test-tracker");
+        router.push("/dashboard");
       } catch (error) {
         // 8. HANDLE ANY ERRORS (e.g storage issues)
         console.log("Error saving user:", error);
