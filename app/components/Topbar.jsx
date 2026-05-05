@@ -1,6 +1,7 @@
 "use client";
 
 import { FaBars } from "react-icons/fa";
+import DateTracker from "./DateTracker";
 
 /**
  * TOPBAR (RAFC STYLE)
@@ -18,9 +19,8 @@ const Topbar = ({ setMobileOpen }) => {
       </button>
 
       {/* TITLE */}
-      <h2 className="text-sm sm:text-base font-semibold text-gray-700">
-        TaskFlow Dashboard
-      </h2>
+
+      <DateTracker />
 
       {/* RIGHT SIDE PLACEHOLDER */}
       <div className="w-6" />
