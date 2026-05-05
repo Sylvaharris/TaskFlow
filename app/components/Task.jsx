@@ -15,29 +15,47 @@ const Task = () => {
   const [filter, setFilter] = useState("all");
 
   // =========================
-  // LOAD FROM LOCAL STORAGE
+  // HYDRATION SAFETY (IMPORTANT FIX)
+  // =========================
+  // We use this to ensure localStorage only runs in the browser
+  const [mounted, setMounted] = useState(false);
+
+  // =========================
+  // RUN ONLY ON CLIENT MOUNT
   // =========================
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // =========================
+  // LOAD FROM LOCAL STORAGE (AFTER MOUNT)
+  // =========================
+  useEffect(() => {
+    if (!mounted) return;
+
     const stored = localStorage.getItem("tasks");
 
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
+
         if (Array.isArray(parsed)) {
-          parsed;
+          setTaskList(parsed);
         }
       } catch (error) {
         console.error("Error parsing tasks:", error);
       }
     }
-  }, []);
+  }, [mounted]);
 
   // =========================
   // SAVE TO LOCAL STORAGE
   // =========================
   useEffect(() => {
+    if (!mounted) return;
+
     localStorage.setItem("tasks", JSON.stringify(taskList));
-  }, [taskList]);
+  }, [taskList, mounted]);
 
   // =========================
   // ADD TASK
@@ -92,10 +110,24 @@ const Task = () => {
     return "text-gray-600 bg-gray-100";
   };
 
+  // =========================
+  // HYDRATION GUARD (IMPORTANT)
+  // =========================
+  // Prevents mismatch between server and client UI
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-400">
+        Loading tasks...
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-pink-50 to-orange-50 px-4 py-6 sm:px-6 md:px-10 lg:px-16">
       <div className="w-full lg:max-w-4xl">
-        {/* HEADER */}
+        {/* =========================
+            HEADER
+            ========================= */}
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900">
             Your <span className="text-pink-600">Tasks</span>
@@ -105,8 +137,11 @@ const Task = () => {
           </p>
         </div>
 
-        {/* INPUT AREA */}
+        {/* =========================
+            INPUT AREA
+            ========================= */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 bg-white p-3 sm:p-4 rounded-2xl border border-gray-200 shadow-sm mb-6">
+          {/* INPUT */}
           <input
             type="text"
             placeholder="What needs to get done?"
@@ -146,7 +181,9 @@ const Task = () => {
           </div>
         </div>
 
-        {/* FILTERS */}
+        {/* =========================
+            FILTER BUTTONS
+            ========================= */}
         <div className="flex flex-wrap gap-2 mb-6">
           {[
             { key: "all", label: "All" },
@@ -167,7 +204,9 @@ const Task = () => {
           ))}
         </div>
 
-        {/* TASK LIST */}
+        {/* =========================
+            TASK LIST
+            ========================= */}
         <div className="space-y-3">
           {filteredTasks.map((task) => (
             <div
@@ -194,7 +233,6 @@ const Task = () => {
               </div>
 
               <div className="flex items-center justify-between sm:justify-end gap-3">
-                {/* PRIORITY BADGE */}
                 <span
                   className={`text-xs px-3 py-1 rounded-full font-medium ${getPriorityColor(
                     task.priority,
@@ -203,7 +241,6 @@ const Task = () => {
                   {task.priority}
                 </span>
 
-                {/* DELETE */}
                 <button
                   onClick={() => handleDelete(task.id)}
                   className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"
@@ -215,7 +252,9 @@ const Task = () => {
           ))}
         </div>
 
-        {/* EMPTY STATE */}
+        {/* =========================
+            EMPTY STATE
+            ========================= */}
         {filteredTasks.length === 0 && (
           <p className="text-center text-gray-400 mt-10 text-sm">
             No tasks found

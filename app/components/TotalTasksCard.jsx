@@ -1,13 +1,38 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FiList } from "react-icons/fi";
 
-const TotalTasksCard = ({ taskList = [] }) => {
+const TotalTasksCard = () => {
+  // =========================
+  // STATE (TASKS FROM LOCAL STORAGE)
+  // =========================
+  const [taskList, setTaskList] = useState([]);
+
+  // =========================
+  // LOAD TASKS FROM LOCAL STORAGE
+  // =========================
+  useEffect(() => {
+    const stored = localStorage.getItem("tasks");
+
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+
+        // Ensure it's always an array
+        if (Array.isArray(parsed)) {
+          setTaskList(parsed);
+        }
+      } catch (error) {
+        console.error("Error loading tasks:", error);
+        setTaskList([]);
+      }
+    }
+  }, []);
+
   // =========================
   // TOTAL TASKS COUNT
   // =========================
-  // We safely use .length because taskList is always an array now
   const totalTasks = taskList.length;
 
   return (

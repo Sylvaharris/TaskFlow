@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiClock, FiX, FiZap } from "react-icons/fi";
 
 /**
@@ -11,11 +11,37 @@ import { FiClock, FiX, FiZap } from "react-icons/fi";
  * - Clicking button opens modal
  */
 
-const PendingTasksWithAIInsight = ({ taskList = [] }) => {
+const PendingTasksWithAIInsight = () => {
   // =========================
   // STATE: MODAL OPEN/CLOSE
   // =========================
   const [open, setOpen] = useState(false);
+
+  // =========================
+  // STATE: TASKS FROM LOCAL STORAGE
+  // =========================
+  const [taskList, setTaskList] = useState([]);
+
+  // =========================
+  // LOAD TASKS FROM LOCAL STORAGE
+  // =========================
+  useEffect(() => {
+    const stored = localStorage.getItem("tasks");
+
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+
+        // Ensure valid array
+        if (Array.isArray(parsed)) {
+          setTaskList(parsed);
+        }
+      } catch (error) {
+        console.error("Error loading tasks:", error);
+        setTaskList([]);
+      }
+    }
+  }, []);
 
   // =========================
   // FILTER PENDING TASKS
@@ -32,6 +58,7 @@ const PendingTasksWithAIInsight = ({ taskList = [] }) => {
             LEFT - TASK LIST
             ========================= */}
         <div className="lg:col-span-2 bg-white border border-gray-200 rounded-2xl p-4 sm:p-5 shadow-sm">
+          {/* HEADER */}
           <div className="flex items-center gap-2 mb-4">
             <FiClock className="text-orange-500" size={20} />
             <h2 className="text-sm sm:text-base font-semibold text-gray-800">
@@ -39,6 +66,7 @@ const PendingTasksWithAIInsight = ({ taskList = [] }) => {
             </h2>
           </div>
 
+          {/* TASK LIST */}
           <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
             {pendingTasks.length === 0 && (
               <p className="text-sm text-gray-400 text-center py-6">
@@ -68,15 +96,18 @@ const PendingTasksWithAIInsight = ({ taskList = [] }) => {
             ========================= */}
         <div className="bg-gradient-to-br from-pink-500 via-orange-500 to-red-500 text-white rounded-2xl p-5 sm:p-6 shadow-md flex flex-col justify-between">
           <div>
+            {/* HEADER */}
             <div className="flex items-center gap-2 mb-3">
               <FiZap size={20} />
               <h2 className="text-sm sm:text-base font-semibold">AI Insight</h2>
             </div>
 
+            {/* DESCRIPTION */}
             <p className="text-sm text-white/90">
               Get smart suggestions based on your task behavior and priorities.
             </p>
 
+            {/* STATS */}
             <div className="mt-4 bg-white/20 rounded-xl p-3 text-sm">
               🔥 You have{" "}
               <span className="font-bold">{pendingTasks.length}</span> pending
@@ -84,7 +115,7 @@ const PendingTasksWithAIInsight = ({ taskList = [] }) => {
             </div>
           </div>
 
-          {/* BUTTON THAT OPENS MODAL */}
+          {/* BUTTON */}
           <button
             onClick={() => setOpen(true)}
             className="mt-6 bg-white text-pink-600 font-semibold py-2 rounded-lg hover:bg-gray-100 transition active:scale-[0.98]"
@@ -122,11 +153,12 @@ const PendingTasksWithAIInsight = ({ taskList = [] }) => {
               </div>
             </div>
 
-            {/* TEXT */}
+            {/* TITLE */}
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 text-center mb-2">
               AI Suggestions
             </h2>
 
+            {/* TEXT */}
             <p className="text-sm text-gray-500 text-center mb-6">
               Based on your tasks, focus on completing high priority items first
               to improve productivity.
