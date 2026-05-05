@@ -1,5 +1,7 @@
 "use client";
 
+import DateTracker from "../components/DateTracker";
+
 /**
  * DASHBOARD HOME PAGE
  * - Only renders content
@@ -8,12 +10,13 @@
 const DashboardPage = () => {
   return (
     <div className="space-y-4">
+      <DateTracker />
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
         Dashboard
       </h1>
 
       <p className="text-gray-600 text-sm sm:text-base">
-        Welcome back 👋 Here is your productivity overview.
+        Welcome back, Here is your productivity overview.
       </p>
 
       {/* SIMPLE GRID CARDS */}

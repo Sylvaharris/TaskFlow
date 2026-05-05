@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Logo from "./Logo";
 
 import {
   FiHome,
@@ -11,6 +12,8 @@ import {
   FiCalendar,
   FiSettings,
   FiX,
+  FiChevronLeft,
+  FiChevronRight,
 } from "react-icons/fi";
 
 /**
@@ -26,7 +29,7 @@ const Sidebar = ({ mobileOpen, setMobileOpen }) => {
 
   const links = [
     { name: "Dashboard", path: "/dashboard", icon: <FiHome /> },
-    { name: "Tasks", path: "/dashboard/tasks", icon: <FiCheckSquare /> },
+    { name: "Tasks", path: "/dashboard/task", icon: <FiCheckSquare /> },
     { name: "AI", path: "/dashboard/ai", icon: <FiCpu /> },
     { name: "Calendar", path: "/dashboard/calendar", icon: <FiCalendar /> },
     { name: "Settings", path: "/dashboard/settings", icon: <FiSettings /> },
@@ -60,10 +63,14 @@ const Sidebar = ({ mobileOpen, setMobileOpen }) => {
         `}
       >
         {/* TOP */}
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex gap-6 items-center justify-between p-4 border-b">
           {/* LOGO AREA */}
           {!collapsed && (
-            <h1 className="font-bold text-lg text-pink-600">TaskFlow</h1>
+            <div className="w-40">
+              {" "}
+              {/* control width */}
+              <Logo />
+            </div>
           )}
 
           {/* CLOSE BUTTON (mobile only) */}
@@ -79,7 +86,7 @@ const Sidebar = ({ mobileOpen, setMobileOpen }) => {
             onClick={() => setCollapsed(!collapsed)}
             className="hidden md:block text-sm text-gray-600"
           >
-            {collapsed ? "→" : "←"}
+            {collapsed ? <FiChevronLeft /> : <FiChevronRight />}
           </button>
         </div>
 
