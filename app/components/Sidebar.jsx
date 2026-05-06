@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Logo from "./Logo";
@@ -14,19 +14,25 @@ import {
   FiX,
   FiChevronLeft,
   FiChevronRight,
+  FiLogOut,
 } from "react-icons/fi";
 
 /**
  * SIDEBAR COMPONENT (RAFC STYLE)
- * - Desktop: collapsible
- * - Mobile: drawer
+ * - Desktop: collapsible sidebar
+ * - Mobile: drawer with overlay
  * - Active route highlighting
+ * - Logout uses gradient border (not filled button)
  */
 const Sidebar = ({ mobileOpen, setMobileOpen }) => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const [collapsed, setCollapsed] = useState(false);
 
+  /**
+   * NAVIGATION LINKS
+   */
   const links = [
     { name: "Dashboard", path: "/dashboard", icon: <FiHome /> },
     { name: "Tasks", path: "/dashboard/task", icon: <FiCheckSquare /> },
@@ -35,14 +41,25 @@ const Sidebar = ({ mobileOpen, setMobileOpen }) => {
     { name: "Settings", path: "/dashboard/profile", icon: <FiSettings /> },
   ];
 
-  // close mobile sidebar on route change
+  /**
+   * CLOSE MOBILE SIDEBAR ON ROUTE CHANGE
+   */
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
+  /**
+   * LOGOUT HANDLER
+   */
+  const handleLogout = () => {
+    router.push("/login-page");
+  };
+
   return (
     <>
-      {/* OVERLAY (MOBILE ONLY) */}
+      {/* =========================
+          MOBILE OVERLAY
+      ========================= */}
       {mobileOpen && (
         <div
           onClick={() => setMobileOpen(false)}
@@ -50,7 +67,9 @@ const Sidebar = ({ mobileOpen, setMobileOpen }) => {
         />
       )}
 
-      {/* SIDEBAR */}
+      {/* =========================
+          SIDEBAR WRAPPER
+      ========================= */}
       <aside
         className={`
           fixed md:static z-50 h-full bg-white border-r flex flex-col
@@ -62,18 +81,17 @@ const Sidebar = ({ mobileOpen, setMobileOpen }) => {
           ${mobileOpen ? "left-0" : "-left-full md:left-0"}
         `}
       >
-        {/* TOP */}
-        <div className="flex gap-6 items-center justify-between p-4 border-b">
-          {/* LOGO AREA */}
+        {/* =========================
+            TOP SECTION
+        ========================= */}
+        <div className="flex items-center justify-between p-4 border-b">
           {!collapsed && (
             <div className="w-40">
-              {" "}
-              {/* control width */}
               <Logo />
             </div>
           )}
 
-          {/* CLOSE BUTTON (mobile only) */}
+          {/* MOBILE CLOSE */}
           <button
             onClick={() => setMobileOpen(false)}
             className="md:hidden text-xl"
@@ -81,36 +99,34 @@ const Sidebar = ({ mobileOpen, setMobileOpen }) => {
             <FiX />
           </button>
 
-          {/* COLLAPSE BUTTON (desktop only) */}
+          {/* COLLAPSE */}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden md:block text-sm text-gray-600"
+            className="hidden md:block text-gray-600"
           >
             {collapsed ? <FiChevronLeft /> : <FiChevronRight />}
           </button>
         </div>
 
-        {/* LINKS */}
-        <nav className="flex flex-col gap-2 p-3">
+        {/* =========================
+            NAVIGATION LINKS
+        ========================= */}
+        <nav className="flex flex-col gap-2 p-3 flex-1">
           {links.map((link) => {
             const isActive = pathname === link.path;
 
             return (
               <Link key={link.path} href={link.path}>
                 <div
-                  className={`
-                    flex items-center gap-3 p-3 rounded-lg transition
-
-                    ${
-                      isActive
-                        ? "bg-gradient-to-r from-orange-400 via-pink-600 to-red-600 text-white"
-                        : "text-gray-600 hover:bg-gray-100"
-                    }
-                  `}
+                  className={
+                    "flex items-center gap-3 p-3 rounded-lg transition " +
+                    (isActive
+                      ? "bg-gradient-to-r from-orange-400 via-pink-600 to-red-600 text-white"
+                      : "text-gray-600 hover:bg-gray-100")
+                  }
                 >
                   <span className="text-lg">{link.icon}</span>
 
-                  {/* hide text when collapsed */}
                   {!collapsed && (
                     <span className="text-sm font-medium">{link.name}</span>
                   )}
@@ -119,6 +135,38 @@ const Sidebar = ({ mobileOpen, setMobileOpen }) => {
             );
           })}
         </nav>
+
+        {/* =========================
+    LOGOUT (GRADIENT BORDER + RED CONTENT)
+========================= */}
+        <div className="p-3 border-t">
+          <button
+            onClick={handleLogout}
+            className="
+      w-full p-[2px] rounded-lg
+      bg-gradient-to-r from-orange-400 via-pink-600 to-red-600
+    "
+          >
+            {/* INNER BUTTON */}
+            <div
+              className="
+        flex items-center gap-3 p-3
+        bg-white rounded-md
+        text-red-600
+        hover:bg-red-50
+        transition
+      "
+            >
+              {/* ICON */}
+              <FiLogOut className="text-lg text-red-600" />
+
+              {/* TEXT (hidden when collapsed) */}
+              {!collapsed && (
+                <span className="text-sm font-medium text-red-600">Logout</span>
+              )}
+            </div>
+          </button>
+        </div>
       </aside>
     </>
   );
