@@ -31,7 +31,7 @@ const Sidebar = ({ mobileOpen, setMobileOpen }) => {
     { name: "Dashboard", path: "/dashboard", icon: <FiHome /> },
     { name: "Tasks", path: "/dashboard/task", icon: <FiCheckSquare /> },
     { name: "AI", path: "/dashboard/ai", icon: <FiCpu /> },
-    { name: "Calendar", path: "/dashboard/calendar", icon: <FiCalendar /> },
+    { name: "Calendar", path: "/dashboard/calender", icon: <FiCalendar /> },
     { name: "Settings", path: "/dashboard/profile", icon: <FiSettings /> },
   ];
 
